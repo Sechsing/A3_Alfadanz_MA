@@ -79,6 +79,7 @@ class BinarySearchTree(Generic[K, I]):
 
     def __setitem__(self, key: K, item: I) -> None:
         self.root = self.insert_aux(self.root, key, item)
+        self.root.set_subtree_size(self.length)
 
     def insert_aux(self, current: TreeNode, key: K, item: I) -> TreeNode:
         """
@@ -93,8 +94,10 @@ class BinarySearchTree(Generic[K, I]):
             self.length += 1
         elif key < current.key:
             current.left = self.insert_aux(current.left, key, item)
+            current.set_subtree_size(current.subtree_size+1)
         elif key > current.key:
             current.right = self.insert_aux(current.right, key, item)
+            current.set_subtree_size(current.subtree_size+1)
         else:  # key == current.key
             raise ValueError('Inserting duplicate item')
         return current
@@ -190,5 +193,8 @@ class BinarySearchTree(Generic[K, I]):
         """
         Finds the kth smallest value by key in the subtree rooted at current.
         """
-        if k <= len(current):
-            pass
+        # if k == current.subtree_size:
+        #     current_node = current
+        #     while current_node.right is not None:
+        #         current_node = current_node.right
+        #     return current_node
