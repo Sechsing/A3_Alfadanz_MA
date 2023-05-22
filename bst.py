@@ -104,6 +104,7 @@ class BinarySearchTree(Generic[K, I]):
 
     def __delitem__(self, key: K) -> None:
         self.root = self.delete_aux(self.root, key)
+        self.root.set_subtree_size(self.length)
 
     def delete_aux(self, current: TreeNode, key: K) -> TreeNode:
         """
@@ -115,8 +116,10 @@ class BinarySearchTree(Generic[K, I]):
             raise ValueError('Deleting non-existent item')
         elif key < current.key:
             current.left  = self.delete_aux(current.left, key)
+            current.set_subtree_size(current.subtree_size-1)
         elif key > current.key:
             current.right = self.delete_aux(current.right, key)
+            current.set_subtree_size(current.subtree_size - 1)
         else:  # we found our key => do actual deletion
             if self.is_leaf(current):
                 self.length -= 1
@@ -193,8 +196,28 @@ class BinarySearchTree(Generic[K, I]):
         """
         Finds the kth smallest value by key in the subtree rooted at current.
         """
-        # if k == current.subtree_size:
-        #     current_node = current
-        #     while current_node.right is not None:
-        #         current_node = current_node.right
-        #     return current_node
+
+        if k == current.subtree_size:
+            current_node = current
+            while current_node.right is not None:
+                current_node = current_node.right
+            return current_node
+
+        elif k == 1:
+            current_node = current
+            while current_node.left is not None:
+                current_node = current.node.left
+            return current_node
+
+        else:
+            self.lst = []
+            self.kth_smallest_aux(current)
+
+            return self.lst[k-1]
+
+    def kth_smallest_aux(self, current: TreeNode):
+        if current is not None:
+            self.kth_smallest_aux(current.left)
+            self.lst.append(current)
+            self.kth_smallest_aux(current.right)
+
