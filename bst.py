@@ -212,7 +212,6 @@ class BinarySearchTree(Generic[K, I]):
         else:
             self.lst = []
             self.kth_smallest_aux(current)
-
             return self.lst[k-1]
 
     def kth_smallest_aux(self, current: TreeNode):
