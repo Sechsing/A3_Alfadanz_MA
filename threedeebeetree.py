@@ -61,7 +61,6 @@ class ThreeDeeBeeTree(Generic[I]):
 
     def __len__(self) -> int:
         """ Returns the number of nodes in the tree. """
-
         return self.length
 
     def __contains__(self, key: Point) -> bool:
@@ -82,7 +81,30 @@ class ThreeDeeBeeTree(Generic[I]):
         return node.item
 
     def get_tree_node_by_key(self, key: Point) -> BeeNode:
-        return self.root.get_child_for_key(key)
+        #return self.root.get_child_for_key(key)
+        return self.get_tree_node_by_key_aux(self.root, key)
+
+    def get_tree_node_by_key_aux(self, current: BeeNode, key: Point) -> BeeNode:
+        if current is None:
+            raise KeyError('Key not found: {0}'.format(key))
+        elif key == current.key:
+            return current
+        elif key[0] < current.key[0] and key[1] < current.key[1] and key[2] >= current.key[2]:
+            self.get_tree_node_by_key_aux(current.d1, key)
+        elif key[0] < current.key[0] and key[1] >= current.key[1] and key[2] < current.key[2]:
+            self.get_tree_node_by_key_aux(current.d2, key)
+        elif key[0] >= current.key[0] and key[1] < current.key[1] and key[2] < current.key[2]:
+            self.get_tree_node_by_key_aux(current.d3, key)
+        elif key[0] < current.key[0] and key[1] >= current.key[1] and key[2] >= current.key[2]:
+            self.get_tree_node_by_key_aux(current.d4, key)
+        elif key[0] >= current.key[0] and key[1] >= current.key[1] and key[2] < current.key[2]:
+            self.get_tree_node_by_key_aux(current.d5, key)
+        elif key[0] >= current.key[0] and key[1] < current.key[1] and key[2] >= current.key[2]:
+            self.get_tree_node_by_key_aux(current.d6, key)
+        elif key[0] > current.key[0] and key[1] > current.key[1] and key[2] > current.key[2]:
+            self.get_tree_node_by_key_aux(current.d7, key)
+        else:
+            self.get_tree_node_by_key_aux(current.d8, key)
 
     def __setitem__(self, key: Point, item: I) -> None:
         self.root = self.insert_aux(self.root, key, item)
@@ -96,6 +118,8 @@ class ThreeDeeBeeTree(Generic[I]):
             current.key = key
             current.item = item
             self.length += 1
+        elif key == current.key:
+            return current
         elif key != current.key:
             if key[0] < current.key[0] and key[1] < current.key[1] and key[2] >= current.key[2]:
                 current.d1 = self.insert_aux(current.d1, key, item)
@@ -116,11 +140,10 @@ class ThreeDeeBeeTree(Generic[I]):
             current.subtree_size += 1
         else:
             raise ValueError('Inserting duplicate item')
-        return current
 
     def is_leaf(self, current: BeeNode) -> bool:
         """ Simple check whether or not the node is a leaf. """
-        raise NotImplementedError()
+        return current.d1 is None and current.d2 is None and current.d3 is None and current.d4 is None and current.d5 is None and current.d6 is None and current.d7 is None and current.d8 is None
 
 if __name__ == "__main__":
     tdbt = ThreeDeeBeeTree()
