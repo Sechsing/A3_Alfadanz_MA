@@ -21,6 +21,11 @@ class BeeNode:
     subtree_size: int = 1
 
     def get_child_for_key(self, point: Point) -> BeeNode | None:
+        """
+            Finds the child node that is closer to the key by comparison
+            :complexity best: O(Comp) where Comp is the complexity of comparison operation
+            :complexity worst: O(Comp) same as best case
+        """
         if point[0] < self.key[0] and point[1] < self.key[1] and point[2] >= self.key[2]:
             return self.d1
         elif point[0] < self.key[0] and point[1] >= self.key[1] and point[2] < self.key[2]:
@@ -40,6 +45,11 @@ class BeeNode:
         return None
 
     def set_subtree_size(self, subtree_size: int) -> None:
+        """
+            Set subtree_size with the input
+            :complexity best: O(1)
+            :complexity worst: O(1) same as best case
+        """
         self.subtree_size = subtree_size
 
 class ThreeDeeBeeTree(Generic[I]):
@@ -80,9 +90,21 @@ class ThreeDeeBeeTree(Generic[I]):
         return node.item
 
     def get_tree_node_by_key(self, key: Point) -> BeeNode:
+        """
+            Returns the beenode by calling auxiliary method
+            :complexity best: O(1)
+            :complexity worst: O(1) same as best case
+        """
         return self.get_tree_node_by_key_aux(self.root, key)
 
     def get_tree_node_by_key_aux(self, current: BeeNode, key: Point) -> BeeNode:
+        """
+            Recursively calls itself to return beenode when the key matches
+            :complexity best: O(Comp) where Comp is the complexity of comparison operation when the key matches the root
+             node's key and does not traverse through other nodes
+            :complexity worst: O(N*Comp) where N is the number of nodes in 3dbt when the 3dbt is unbalanced with nodes
+            always being at one side and the method has to be called N times to return the beenode
+        """
         if current is None:
             raise KeyError('Key not found: {0}'.format(key))
         elif key == current.key:
@@ -105,12 +127,22 @@ class ThreeDeeBeeTree(Generic[I]):
             return self.get_tree_node_by_key_aux(current.d8, key)
 
     def __setitem__(self, key: Point, item: I) -> None:
+        """
+            Sets the item at one of the nodes by calling the auxiliary method
+            :complexity best: O(1) where the method calls the auxiliary method and the sets subtree_size to self.length
+            :complexity worst: O(1) same as best case
+        """
         self.root = self.insert_aux(self.root, key, item)
         self.root.set_subtree_size(self.length)
 
     def insert_aux(self, current: BeeNode, key: Point, item: I) -> BeeNode:
         """
-            Attempts to insert an item into the tree, it uses the Key to insert it
+            Recursively calls itself to insert an item into the tree, it uses the Key to insert it
+            :complexity best: O(1) where the method inserts the item at the root node and does not compare or traverse
+            through other nodes
+            :complexity worst: O(N*Comp) where N is the number of nodes in 3dbt and Comp is the complexity of the
+            comparison operation when the 3dbt is unbalanced with nodes always being at one side and the method has to
+            be called N times to insert the item at current
         """
         if current is None:
             current = BeeNode(key, item=item)
@@ -138,7 +170,11 @@ class ThreeDeeBeeTree(Generic[I]):
         return current
 
     def is_leaf(self, current: BeeNode) -> bool:
-        """ Simple check whether or not the node is a leaf. """
+        """
+            Simple check whether or not the node is a leaf.
+            :complexity best: O(1) where the method checks if the nodes are None
+            :complexity worst: O(1) same as best case
+        """
         return current.d1 is None and current.d2 is None and current.d3 is None and current.d4 is None and current.d5 is None and current.d6 is None and current.d7 is None and current.d8 is None
 
 if __name__ == "__main__":
