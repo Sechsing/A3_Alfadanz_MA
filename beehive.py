@@ -27,10 +27,11 @@ class BeehiveSelector:
     def add_beehive(self, hive: Beehive):
         honey = hive.nutrient_factor * hive.volume
         harvest = min(hive.capacity, hive.volume) * hive.nutrient_factor
-        if honey > 0 and harvest > 0:
-            times = int(honey/harvest)
-            for i in range(times):
-                self.selector.add(harvest)
+        while harvest < honey:
+            self.selector.add(harvest)
+            honey -= harvest
+        harvest = honey
+        self.selector.add(harvest)
     
     def harvest_best_beehive(self):
         if len(self.selector) > 0:
