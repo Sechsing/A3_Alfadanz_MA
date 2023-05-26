@@ -16,13 +16,22 @@ class Beehive:
 class BeehiveSelector:
 
     def __init__(self, max_beehives: int):
-        raise NotImplementedError()
+        self.selector = MaxHeap(max_beehives*100)
 
     def set_all_beehives(self, hive_list: list[Beehive]):
-        raise NotImplementedError()
-    
+        self.selector = None
+        self.selector = MaxHeap(len(hive_list)*100)
+        for item in hive_list:
+            self.add_beehive(item)
+
     def add_beehive(self, hive: Beehive):
-        raise NotImplementedError()
+        honey = hive.nutrient_factor * hive.volume
+        harvest = min(hive.capacity, hive.volume) * hive.nutrient_factor
+        if honey > 0 and harvest > 0:
+            times = int(honey/harvest)
+            for i in range(times):
+                self.selector.add(harvest)
     
     def harvest_best_beehive(self):
-        raise NotImplementedError()
+        if len(self.selector) > 0:
+            return self.selector.get_max()
