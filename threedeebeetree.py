@@ -22,37 +22,22 @@ class BeeNode:
 
     def get_child_for_key(self, point: Point) -> BeeNode | None:
         if point[0] < self.key[0] and point[1] < self.key[1] and point[2] >= self.key[2]:
-            if self.d1 is None or self.d1.key == point:
-                return self
-            return self.d1.get_child_for_key(point)
+            return self.d1
         elif point[0] < self.key[0] and point[1] >= self.key[1] and point[2] < self.key[2]:
-            if self.d2 is None or self.d2.key == point:
-                return self
-            return self.d2.get_child_for_key(point)
+            return self.d2
         elif point[0] >= self.key[0] and point[1] < self.key[1] and point[2] < self.key[2]:
-            if self.d3 is None or self.d3.key == point:
-                return self
-            return self.d3.get_child_for_key(point)
+            return self.d3
         elif point[0] < self.key[0] and point[1] >= self.key[1] and point[2] >= self.key[2]:
-            if self.d4 is None or self.d4.key == point:
-                return self
-            return self.d4.get_child_for_key(point)
+            return self.d4
         elif point[0] >= self.key[0] and point[1] >= self.key[1] and point[2] < self.key[2]:
-            if self.d5 is None or self.d5.key == point:
-                return self
-            return self.d5.get_child_for_key(point)
+            return self.d5
         elif point[0] >= self.key[0] and point[1] < self.key[1] and point[2] >= self.key[2]:
-            if self.d6 is None or self.d6.key == point:
-                return self
-            return self.d6.get_child_for_key(point)
-        elif point[0] > self.key[0] and point[1] > self.key[1] and point[2] > self.key[2]:
-            if self.d7 is None or self.d7.key == point:
-                return self
-            return self.d7.get_child_for_key(point)
-        else:
-            if self.d8 is None or self.d8.key == point:
-                return self
-            return self.d8.get_child_for_key(point)
+            return self.d6
+        elif point[0] >= self.key[0] and point[1] >= self.key[1] and point[2] >= self.key[2]:
+            return self.d7
+        elif point[0] < self.key[0] and point[1] < self.key[1] and point[2] < self.key[2]:
+            return self.d8
+        return None
 
     def set_subtree_size(self, subtree_size: int) -> None:
         self.subtree_size = subtree_size
@@ -114,9 +99,9 @@ class ThreeDeeBeeTree(Generic[I]):
             return self.get_tree_node_by_key_aux(current.d5, key)
         elif key[0] >= current.key[0] and key[1] < current.key[1] and key[2] >= current.key[2]:
             return self.get_tree_node_by_key_aux(current.d6, key)
-        elif key[0] > current.key[0] and key[1] > current.key[1] and key[2] > current.key[2]:
+        elif key[0] >= current.key[0] and key[1] >= current.key[1] and key[2] >= current.key[2]:
             return self.get_tree_node_by_key_aux(current.d7, key)
-        else:
+        elif key[0] < current.key[0] and key[1] < current.key[1] and key[2] < current.key[2]:
             return self.get_tree_node_by_key_aux(current.d8, key)
 
     def __setitem__(self, key: Point, item: I) -> None:
@@ -143,9 +128,9 @@ class ThreeDeeBeeTree(Generic[I]):
                 current.d5 = self.insert_aux(current.d5, key, item)
             elif key[0] >= current.key[0] and key[1] < current.key[1] and key[2] >= current.key[2]:
                 current.d6 = self.insert_aux(current.d6, key, item)
-            elif key[0] > current.key[0] and key[1] > current.key[1] and key[2] > current.key[2]:
+            elif key[0] >= current.key[0] and key[1] >= current.key[1] and key[2] >= current.key[2]:
                 current.d7 = self.insert_aux(current.d7, key, item)
-            else:
+            elif key[0] < current.key[0] and key[1] < current.key[1] and key[2] < current.key[2]:
                 current.d8 = self.insert_aux(current.d8, key, item)
             current.set_subtree_size(current.subtree_size+1)
         else:
