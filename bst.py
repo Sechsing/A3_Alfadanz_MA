@@ -77,6 +77,7 @@ class BinarySearchTree(Generic[K, I]):
         else:  # key > current.key
             return self.get_tree_node_by_key_aux(current.right, key)
 
+
     def __setitem__(self, key: K, item: I) -> None:
         self.root = self.insert_aux(self.root, key, item)
         self.root.set_subtree_size(self.length)
@@ -199,24 +200,32 @@ class BinarySearchTree(Generic[K, I]):
 
         if k == current.subtree_size:
             current_node = current
-            while current_node.right is not None:
-                current_node = current_node.right
+            if current_node.right is not None:
+                current_node = self.kth_smallest(k, current_node.right)
             return current_node
 
         elif k == 1:
             current_node = current
-            while current_node.left is not None:
-                current_node = current.node.left
+            if current_node.left is not None:
+                current_node = self.kth_smallest(k, current.node.left)
             return current_node
 
         else:
-            self.lst = []
-            self.kth_smallest_aux(current)
-            return self.lst[k-1]
+            self.count = 0
+            return self.kth_smallest_aux(current, k)
 
-    def kth_smallest_aux(self, current: TreeNode):
-        if current is not None:
-            self.kth_smallest_aux(current.left)
-            self.lst.append(current)
-            self.kth_smallest_aux(current.right)
+    def kth_smallest_aux(self, current: TreeNode, k: int):
+        if current is None:
+            return None
+
+        left_node = self.kth_smallest_aux(current.left, k)
+        if left_node is not None:
+            return left_node
+
+        self.count += 1
+        if self.count == k:
+            return current
+
+        return self.kth_smallest_aux(current.right, k)
+
 
