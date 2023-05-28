@@ -57,7 +57,11 @@ class MaxHeap(Generic[T]):
     def sink(self, k: int) -> None:
         """ Make the element at index k sink to the correct position.
             :pre: 1 <= k <= self.length
-            :complexity: ???
+            :complexity: Best Case: O(1), where N is the number of elements in the tree, when the element
+                    needed to sink is already in the correct position
+
+                         Worst Case: O(log N), where N is the number of elements in the tree, when the element
+                    needed to sink is the smallest element in the tree.
         """
         item = self.the_array[k]
 

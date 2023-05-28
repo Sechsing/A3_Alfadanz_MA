@@ -145,15 +145,18 @@ class BinarySearchTree(Generic[K, I]):
             Get successor of the current node.
             It should be a child node having the smallest key among all the
             larger keys.
+
+            Complexity: Best Case: O(1), when the current node has no right child node
+                        Worst Case: Where N is the number of elements in the tree;
+                            - Balanced Tree: O(log N), when current node the root node
+                            - Unbalanced Tree: O(N), when current node is the root node and the root node's
+                                        right child tree has a heavily unbalanced subtree skewed to the left
         """
         current_node = current
         if current_node.right is not None:
             successor = current_node.right
-            while current_node.right is not None:
-                current_node = current_node.right
-                if current_node.left is not None:
-                    if current.key < current_node.left.key < successor.key:
-                        successor = current_node.left
+            while successor.left is not None:
+                successor = successor.left
             return successor
 
         else:
@@ -162,6 +165,12 @@ class BinarySearchTree(Generic[K, I]):
     def get_minimal(self, current: TreeNode) -> TreeNode:
         """
             Get a node having the smallest key in the current sub-tree.
+
+            Complexity: Best Case: O(1), when the current node does not have a left child node
+                        Worst Case: Where N is the number of elements in the tree;
+                            - Balanced Tree: O(log N), when current node is root node
+                            - Unbalanced Tree: O(N), when current node is root node and
+                                            the tree is heavily skewed to the left
         """
         if current.left is None:
             return current
@@ -196,6 +205,13 @@ class BinarySearchTree(Generic[K, I]):
     def kth_smallest(self, k: int, current: TreeNode) -> TreeNode:
         """
         Finds the kth smallest value by key in the subtree rooted at current.
+
+        Complexity: Best Case: O(log N), where N is the number of elements in the tree,
+                            when k = N or k = 1. The method would only need to go to the rightmost element
+                            or leftmost element.
+
+                    Worst Case: O(N * log N), where N is the number of elements in the tree,
+                            when k = N-1
         """
 
         if k == current.subtree_size:
