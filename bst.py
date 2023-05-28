@@ -207,7 +207,7 @@ class BinarySearchTree(Generic[K, I]):
         elif k == 1:
             current_node = current
             if current_node.left is not None:
-                current_node = self.kth_smallest(k, current.node.left)
+                current_node = self.kth_smallest(k, current_node.left)
             return current_node
 
         else:

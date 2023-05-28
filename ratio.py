@@ -10,28 +10,26 @@ I = TypeVar("I")
 class Percentiles(Generic[T]):
 
     def __init__(self) -> None:
-        self.array = []
-    
+        self.array = BinarySearchTree()
+
     def add_point(self, item: T):
-        self.array.append(item)
+        self.array[item] = item
     def remove_point(self, item: T):
-        self.array.remove(item)
+        del self.array[item]
 
     def ratio(self, x: int, y: int) -> list:
         res = []
-        for i in self.array:
-            res.append(i)
-        a = (x/100)*len(res)
+
+        a = (x/100)*len(self.array)
         b = ceil(a)
 
-        c = (y/100)*len(res)
+        c = (y/100)*len(self.array)
         d = ceil(c)
 
-        for _ in range(b):
-            res.remove(min(res))
-
-        for _ in range(d):
-            res.remove(max(res))
+        for key in range(len(self.array)):
+            if (key > b) and (key <= (len(self.array)-d)):
+                element = self.array.kth_smallest(key, self.array.root)
+                res.append(element.key)
 
         return res
 
